@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Collections;
 using System.Net;
 using System.Net.Sockets;
-using MySql.Data.MySqlClient;
+//using MySql.Data.MySqlClient;
 
 namespace LoginServer
 {
@@ -27,15 +27,15 @@ namespace LoginServer
             while (true)
             {
                 serverInstance.HoldListening();
-                Console.Clear();
-                Console.WriteLine("Connections: " + serverInstance._connections.Count);
+                //Console.Clear();
+                //Console.WriteLine("Connections: " + serverInstance._connections.Count);
             }
 
         }
         private void SetupServer()
         {
             serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            IPEndPoint ipLocal = new IPEndPoint(IPAddress.Any, 32211);
+            IPEndPoint ipLocal = new IPEndPoint(IPAddress.Any, 50000);
             serverSocket.Bind(ipLocal);
             serverSocket.Listen(100);
             singleton = this;
