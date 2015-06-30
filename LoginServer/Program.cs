@@ -27,6 +27,8 @@ namespace LoginServer
             while (true)
             {
                 serverInstance.HoldListening();
+                Console.Clear();
+                Console.WriteLine("Connections: " + serverInstance._connections.Count);
             }
 
         }
@@ -49,7 +51,7 @@ namespace LoginServer
                 Socket newSocket = ((Socket)list[i]).Accept();
                 _connections.Add(newSocket);
                 _byteBuffer.Add(new ArrayList());
-                Console.WriteLine("New Connection from: "+newSocket.LocalEndPoint.ToString());
+                Console.WriteLine("New Connection from: " + newSocket.LocalEndPoint.ToString());
             }
             ReadData();
         }
@@ -68,10 +70,11 @@ namespace LoginServer
                     {
                         buffer.Add(receivedBytes[i]);
                     }
+
                     while (true && buffer.Count > 0)
                     {
                         int length = (byte)buffer[0];
-                        Console.WriteLine(length + " | " + buffer.Count +" | " + buffer[0].ToString());
+                        Console.WriteLine(length + " | " + buffer.Count + " | " + buffer[0].ToString());
                         if (length < buffer.Count)
                         {
                             ArrayList thisMsgBytes = new ArrayList(buffer);
@@ -85,7 +88,7 @@ namespace LoginServer
                             byte[] readBytes = (byte[])thisMsgBytes.ToArray(typeof(byte));
                             MessageData readMsg = MessageData.FromByteArray(readBytes);
                             _buffer.Add(readMsg);
-                            Console.WriteLine("Message of type {0}: {1}",readMsg.type,readMsg.stringData);
+                            Console.WriteLine("Message of type {0}: {1}", readMsg.type, readMsg.stringData);
                             HandleReceivedPacket(readMsg);
                             buffer.Clear();
                             if (singleton != this)
@@ -100,7 +103,15 @@ namespace LoginServer
 
         private void HandleReceivedPacket(MessageData data)
         {
-            Console.WriteLine("Received Package: Type=["+data.type+"] and data=["+data.stringData+"]");
+            switch (data.type)
+            {
+                case (100):
+                    Console.WriteLine("Wuhuu, ne 100");
+                    break;
+                default:
+                    Console.WriteLine("Received Package: Type=[" + data.type + "] and data=[" + data.stringData + "]");
+                    break;
+            }
         }
     }
 }
