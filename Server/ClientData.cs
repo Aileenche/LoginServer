@@ -29,7 +29,7 @@ namespace Server
 
             clientThread = new Thread(Program.Data_IN);
             clientThread.Start(this);
-
+            Console.WriteLine("New Client Connection");
             sendRegistrationPacketToCLient();
         }
 

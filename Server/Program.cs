@@ -16,7 +16,7 @@ namespace Server
         private static List<ClientData> clients;
         private static Socket listener;
         private static TextWriter writer;
-        private static bool log = false;
+        private static bool log = true;
 
         static void Main(string[] args)
         {
@@ -102,26 +102,35 @@ namespace Server
                     if (readBytes > 0)
                     {
                         Packet p = new Packet(Buffer);
-                        if (log) 
-                        { 
-                            writer.WriteLine("Type: " + p.packetType + "\n" + p.data + "\n\n");
+                        if (log)
+                        {
+                            writer.WriteLine("Type: " + p.packetType + " -> Data Count: " + p.data.Count );                            
+                            Console.WriteLine("Type: " + p.packetType + " -> Data Count: " + p.data.Count );
+                            foreach(string values in p.data){
+                                Console.WriteLine("      "+values);
+                            }
                         }
-                        DataManager(p);
+                        DataManager(cSocket,p);
                     }
                 }
                 catch (SocketException ex)
                 {
-                    Console.WriteLine("Client Disconnected.\n" + ex + "\n\n");
+                    Console.WriteLine("Client Disconnected.");
                     clients.Remove(((ClientData)cSocket));
                     Thread.CurrentThread.Abort();
                 }
             }
         }
 
-        public static void DataManager(Packet p)
+        public static void DataManager(object client,Packet p)
         {
             switch (p.packetType)
             {
+                case PacketType.getNews:
+                    Packet news = new Packet(PacketType.getNews, "SERVER");
+                    news.data.Add("There are no News!");
+                    ((ClientData)client).clientSocket.Send(news.ToBytes());
+                    break;
                 case PacketType.Chat:
                     SendMessageToCLients(p);
                     break;
