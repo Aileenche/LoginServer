@@ -13,6 +13,7 @@ namespace Server
         public Socket clientSocket;
         public Thread clientThread;
         public string id;
+        public string username;
 
         public ClientData()
         {
